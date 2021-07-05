@@ -309,7 +309,11 @@ BoundedBuffer::Remove(c){
     if(Rcount == 0)
     		sem_wait(WriteMutex); //确保后续不会有写者进入
     ++Rcount;
+    sem_post(CountMutex);
+	
     read;
+	
+    sem_wait(CountMutex);
     --Rcount;
     if(Rcount == 0)
     		sem_post(WriteMutex); //全部读者全部离开才能唤醒写者
